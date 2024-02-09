@@ -17,7 +17,7 @@ import {
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
 
-const explorerOptions = ['blockchair.com/dash', 'insight.dash.org', 'explorer.mydashwallet.org']
+const explorerOptions = ['blockchair.com/dash', '103.175.220.164:3001', 'explorer.mydashwallet.org']
 
 const Container = styled.div`
 	transition: all linear 0.2s;

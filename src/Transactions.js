@@ -57,9 +57,9 @@ export class Transactions extends Component {
 											<a
 												className="short-link"
 												href={
-													'https://' +
+													'http://' +
 													this.props.explorer +
-													(this.props.explorer === 'insight.dash.org' ? '/insight' : '') +
+													(this.props.explorer === '103.175.220.164:3001' ? '/insight' : '') +
 													(this.props.explorer === 'blockchair.com/dash'
 														? '/transaction/'
 														: '/tx/') +

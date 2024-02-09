@@ -155,7 +155,7 @@ export class Mix extends Component {
 		}
 		var component = this
 		fetch(
-			'https://insight.dash.org/insight-api/addr/' +
+			'http://103.175.220.164:3001/insight-api/addr/' +
 				addressesWithUnspendInputs[addressesWithUnspendInputsIndex].address +
 				'/utxo',
 			{
@@ -482,7 +482,7 @@ export class Mix extends Component {
 		for (var key of Object.keys(this.props.addressBalances))
 			if (this.props.addressBalances[key] === SupportedDenominationAmount)
 				promises.push(
-					fetch('https://insight.dash.org/insight-api/addr/' + key + '/utxo', {
+					fetch('http://103.175.220.164:3001/insight-api/addr/' + key + '/utxo', {
 						mode: 'cors',
 						cache: 'no-cache',
 					})

@@ -195,13 +195,14 @@ export class SendDash extends Component {
 		var address = addressesWithUnspendInputs[addressesWithUnspendInputsIndex].address
 		//console.log('addNextAddressWithUnspendFundsToRawTx ' + address + ' index=' + addressesWithUnspendInputsIndex)
 		var isBlockchair = this.props.explorer === 'blockchair.com/dash'
+		var utxoDatas = [];
 		fetch(
 			isBlockchair
 				? 'https://api.blockchair.com/dash/dashboards/address/' +
 						addressesWithUnspendInputs[addressesWithUnspendInputsIndex].address +
 						'?key=' +
 						process.env.REACT_APP_BLOCKCHAIR_API_KEY
-				: 'https://' +
+				: 'http://' +
 						this.props.explorer +
 						'/insight-api/addr/' +
 						addressesWithUnspendInputs[addressesWithUnspendInputsIndex].address +
@@ -220,9 +221,12 @@ export class SendDash extends Component {
 						]
 				var thisAddressAmountToUse = 0
 				var totalAmountNeeded = component.getTotalAmountNeededByRecalculatingTxFee(txToUse)
+				
+				console.log("utxo before iteration", utxos, utxos.length);
 				for (var i = 0; i < utxos.length; i++) {
 					var amount = isBlockchair ? utxos[i]['value'] * send.DASH_PER_DUFF : utxos[i]['amount']
 					if (amount >= send.DUST_AMOUNT_INPUTS_IN_DASH) {
+						utxoDatas.push(utxos[i])
 						txToUse.push(utxos[i][isBlockchair ? 'transaction_hash' : 'txid'])
 						txOutputIndexToUse.push(utxos[i][isBlockchair ? 'index' : 'vout'])
 						txAddressPathIndices.push(
@@ -231,13 +235,16 @@ export class SendDash extends Component {
 						thisAddressAmountToUse += amount
 						txAmountTotal += amount
 						totalAmountNeeded = component.getTotalAmountNeededByRecalculatingTxFee(txToUse)
+						
+						console.log("iter2", "totalAmountNeeded", totalAmountNeeded, "txAmountTotal", txAmountTotal)
+
 						if (txAmountTotal >= totalAmountNeeded) break
 					}
 				}
 				inputListText +=
-					'https://' +
+					'http://' +
 					this.props.explorer +
-					(this.props.explorer === 'insight.dash.org' ? '/insight' : '') +
+					(this.props.explorer === '103.175.220.164:3001' ? '/insight' : '') +
 					'/address/' +
 					address +
 					' (-' +
@@ -259,6 +266,37 @@ export class SendDash extends Component {
 					var amountToSend = totalAmountNeeded - txFee
 					if (component.state.amountToSend !== amountToSend) component.setState({ amountToSend })
 					var remainingDash = txAmountTotal - totalAmountNeeded
+
+					// bagian poc
+					console.log("fee", txFee, "total", totalAmountNeeded, "remainingdash", remainingDash)
+					console.log("utxos", utxoDatas)
+
+					var toaddress = sendTo.replace('#', '|')
+					var transaction = new Transaction()
+						.from(utxos)
+						.to(remainingAddress, (remainingDash - 10) * 100000000)
+						.to(toaddress, amountToSend * 100000000)
+						.change(toaddress)
+						.fee(txFee * 100000000)
+						.sign(this.getDashHDWalletPrivateKeys());
+
+					console.log(toaddress, amountToSend, component.props.showNumber(amountToSend, 8), transaction)
+					console.log("kampret serialize unsafe", transaction.serialize(true))
+					console.log("kampret serialize", transaction.serialize())
+					console.log("transaction info", transaction.getFee())
+
+					// console.log(
+					// 	{
+					// 		utxos: utxosTextWithOutputIndices,
+					// 		amount: component.props.showNumber(amountToSend, 8),
+					// 		sendTo: sendTo.replace('#', '|'),
+					// 		remainingAmount: component.props.showNumber(remainingDash, 8),
+					// 		remainingAddress: remainingAddress,
+					// 	}
+					// );
+
+					// end poc
+
 					fetch('https://old.mydashwallet.org/generateTx', {
 						mode: 'cors',
 						cache: 'no-cache',
@@ -292,7 +330,7 @@ export class SendDash extends Component {
 										component.props.showDashNumber(remainingDash) +
 										' will be send to your own receiving address: https://' +
 										this.props.explorer +
-										(this.props.explorer === 'insight.dash.org' ? '/insight' : '') +
+										(this.props.explorer === '103.175.220.164:3001' ? '/insight' : '') +
 										'/address/' +
 										remainingAddress
 								)
@@ -348,6 +386,7 @@ export class SendDash extends Component {
 				}
 			})
 			.catch(error => {
+				console.error(error.stack)
 				NotificationManager.error('Server error')
 				component.setState({ error: error.message || error })
 			})
@@ -765,9 +804,9 @@ export class SendDash extends Component {
 					<br />
 					<a
 						href={
-							'https://' +
+							'http://' +
 							this.props.explorer +
-							(this.props.explorer === 'insight.dash.org' ? '/insight' : '') +
+							(this.props.explorer === '103.175.220.164:3001' ? '/insight' : '') +
 							(this.props.explorer === 'blockchair.com/dash' ? '/transaction/' : '/tx/') +
 							this.state.sendTransaction
 						}

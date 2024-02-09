@@ -19,9 +19,9 @@ const Panel = styled.div`
 export class ReceiveDash extends Component {
 	render = () => {
 		var addressLink =
-			'https://' +
+			'http://' +
 			this.props.explorer +
-			(this.props.explorer === 'insight.dash.org' ? '/insight' : '') +
+			(this.props.explorer === '103.175.220.164:3001' ? '/insight' : '') +
 			'/address/' +
 			this.props.lastUnusedAddress
 		return (
@@ -54,9 +54,9 @@ export class ReceiveDash extends Component {
 							<div key={a} style={{ fontSize: '12px' }}>
 								<a
 									href={
-										'https://' +
+										'http://' +
 										this.props.explorer +
-										(this.props.explorer === 'insight.dash.org' ? '/insight' : '') +
+										(this.props.explorer === '103.175.220.164:3001' ? '/insight' : '') +
 										'/address/' +
 										a
 									}

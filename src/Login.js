@@ -187,7 +187,7 @@ export class Login extends Component {
 					</SkyLight>
 					<br />
 					<div style={{ fontSize: 'small', marginBottom: '10px' }}>
-						API supported by blockchair, insight.dash.org and our fallback explorer. Check
+						API supported by blockchair, 103.175.220.164:3001 and our fallback explorer. Check
 						transactions and addresses fully private at
 					</div>
 					<a href="https://blockchair.com/dash" target="_blank" rel="noopener noreferrer">

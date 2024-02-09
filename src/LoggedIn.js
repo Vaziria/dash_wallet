@@ -84,7 +84,7 @@ export class LoggedIn extends Component {
 						address +
 						'?transaction_details=true&key=' +
 						process.env.REACT_APP_BLOCKCHAIR_API_KEY
-				: 'https://' + this.props.explorer + '/insight-api/txs/?address=' + address,
+				: 'http://' + this.props.explorer + '/insight-api/txs/?address=' + address,
 			{
 				mode: 'cors',
 				cache: 'no-cache',
@@ -168,7 +168,7 @@ export class LoggedIn extends Component {
 						addressToCheck +
 						'?key=' +
 						process.env.REACT_APP_BLOCKCHAIR_API_KEY
-				: 'https://' + this.props.explorer + '/insight-api/addr/' + addressToCheck,
+				: 'http://' + this.props.explorer + '/insight-api/addr/' + addressToCheck,
 			{
 				mode: 'cors',
 				cache: 'no-cache',
@@ -304,7 +304,7 @@ export class LoggedIn extends Component {
 						txId +
 						'?key=' +
 						process.env.REACT_APP_BLOCKCHAIR_API_KEY
-				: 'https://' + this.props.explorer + '/insight-api/tx/' + txId,
+				: 'http://' + this.props.explorer + '/insight-api/tx/' + txId,
 			{
 				mode: 'cors',
 				cache: 'no-cache',
